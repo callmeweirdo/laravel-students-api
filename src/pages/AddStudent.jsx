@@ -1,24 +1,28 @@
+import { data } from "autoprefixer";
 import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const AddStudent = () => {
-  const [students, setStudents] = useState({
-    name: "",
-    course: "",
-    email: "",
-    phone: null,
-  });
+  const [students, setStudents] = useState({});
+  const [status, setStatus] = useState({ code: null, message: "" });
 
   const handleInput = (e) => {
-    setStudents({ [e.target.name]: e.target.value });
+    setStudents((values) => ({ ...values, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.post("/api/add-students", students);
-    const data = response.data;
+    const response = await axios.post(
+      "http://localhost:8000/api/add-student",
+      students
+    );
+
+    if (response) {
+      setStatus({ code: response.data.status, message: response.data.message });
+    }
+    // return data;
   };
 
   return (
@@ -28,18 +32,17 @@ const AddStudent = () => {
           <div className="card  ">
             <div className="flex justify-between items-center w-full bg-gray-100 p-3  ">
               <h3 className="text-bold text-left  w-[70%] ">Students Table</h3>
-              <Link
-                to={"add-studen"}
-                className="bg-blue-200 py-2 px-3 rounded w-[30%] "
-              >
+              <Link to={"/"} className="bg-blue-200 py-2 px-3 rounded w-[30%] ">
                 Add Students
               </Link>
             </div>
 
             <div className="my-5 py-5 bg-gray-400 ">
               <div className="mx-5">
-                <h3 className="">Students Form</h3>
-                <form action="" onSubmit={handleSubmit} method="post">
+                <h3 className="">
+                  {status.message ? status.message : "Students Form "}
+                </h3>
+                <form action="POST" onSubmit={handleSubmit} method="post">
                   <div className="p-2">
                     <input
                       type="text"
