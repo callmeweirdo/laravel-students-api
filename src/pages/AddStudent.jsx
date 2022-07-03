@@ -22,6 +22,7 @@ const AddStudent = () => {
     if (response) {
       setStatus({ code: response.data.status, message: response.data.message });
     }
+    
     // return data;
   };
 
