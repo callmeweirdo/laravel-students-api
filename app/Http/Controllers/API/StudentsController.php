@@ -19,14 +19,14 @@ class StudentsController extends Controller
         $students = Student::create($data);
 
         if($students){
-            response()->json([
+            return response()->json([
                 'staus' => 200,
                 'message' => 'Students Added Succesfully'
             ]);
         }else{
-            response()->json([
+            return response()->json([
                 'status' => 404,
-                'message' => 'something is wronge'
+                'message' => 'something is wrong'
             ]);
         }
 
