@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import swal from "sweetalert";
 
 const Students = () => {
   const [state, setState] = useState({ loading: false, students: [] });
@@ -16,6 +17,26 @@ const Students = () => {
     };
     getStudents();
   }, []);
+
+  const handleDelete = async (e, id) => {
+    const deleteBtn = e.currentTarget;
+    deleteBtn.innerText = "Deleting...";
+
+    const response = await axios.delete(
+      `http://localhost:8000/api/delete-student/${id}`
+    );
+
+    if(response){
+      deleteBtn.closest('tr').remove();
+      swal({
+        title: "Delete!",
+        text: response.data.message,
+        icon: "success",
+        button: "Aww yiss!",
+      });
+    }
+
+  }
 
   var TABLE_BODY = "";
 
@@ -35,19 +56,19 @@ const Students = () => {
         <td>{student.phone}</td>
         <td>
           <Link
-            to={`edit-sudent/${student.id}`}
+            to={`edit-student/${student.id}`}
             className="p-2 px-4 bg-blue-300 text-white rounded"
           >
             Edit
           </Link>
         </td>
         <td>
-          <Link
-            to={`delet-sudent/${student.id}`}
+          <button
+            onClick={(e) => handleDelete(e, student.id)}
             className="p-2 bg-red-300 text-white rounded"
           >
             Delete
-          </Link>
+          </button>
         </td>
       </tr>
     ));
